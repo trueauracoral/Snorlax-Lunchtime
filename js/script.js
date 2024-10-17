@@ -226,7 +226,10 @@ function gameLoop() {
 
 document.addEventListener('pointerdown', (event) => {
     console.log("MOUSE CLICKED");
-    isClicked = true;
+    if (!die) {
+        isClicked = true;
+
+    }
 });
 
 gameLoop();
