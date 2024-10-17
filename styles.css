@@ -1,0 +1,78 @@
+body {
+    overflow: hidden;
+    background-color: #494949;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Set the body to take up the full height of the viewport */
+}
+
+div {
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+}
+canvas {
+    transform: scale(8);
+    background-color: #111;
+    image-rendering: pixelated;
+}
+
+#player1Score {
+    left: 35%;
+    bottom: 80%;
+}
+
+#player2Score {
+    right: 35%;
+    bottom: 80%;
+}
+
+h1 {
+    color: #fff;
+    font-family: pong;
+    font-size: 2rem;
+    position: absolute;
+    bottom: 100px;
+}
+
+@font-face {
+    font-family: pong;
+    src: url("./font/pong-score.ttf");
+}
+
+#start {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 70px;
+    flex-direction: column;
+}
+
+button {
+    margin: 10px;
+    background-color: #333;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    border: none;
+}
+
+/* Additional style for the buttons if needed */
+button a {
+    text-decoration: none;
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: #555;
+    border: 2px solid #ffffff;
+}
+
+#logo {
+    transform: scale(0.3);
+    padding: none;
+}

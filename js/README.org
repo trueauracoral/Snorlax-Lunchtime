@@ -1,0 +1,27 @@
+* Snorlax's Lunchtime in JS
+Small project making a clone of snorlax's lunchtime but with a hippo. 
+
+Play here: 
+
+** Tutorials I used
+- https://fontstruct.com/fontstructions/show/716744/3_by_5_pixel_font Used this font
+
+- Sorlax LunchTime
+  https://www.youtube.com/watch?v=dmIXyomWqH
+  - Art [75%]
+    - [X] Snorlax
+    - [X] Food
+    - [X] Arrows/UI
+    - [ ] Game over
+  - Code [83%]
+    - [X] Arrows
+    - [X] Counter
+      - [X] Dishes eaten
+      - [X] Points
+        - [X] avoid aligator 20 points
+        - [X] Click at correct arrow point great, good, ok
+        - [X] pumpkin, watermellon, pineapple 5 points
+    - [ ] Death screen
+    - [X] choose correct fruit random goes down to the table
+    - [X] Aligator
+    - [X] eat correct sprite
