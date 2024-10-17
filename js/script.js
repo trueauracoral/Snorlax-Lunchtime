@@ -34,6 +34,9 @@ var die = false;
 function loadImage(src) {
     var img = new Image();
     img.src = src;
+    this.onload = function() {
+        return true;
+    }
     return img;
 }
 function sleep(ms) {
@@ -44,7 +47,12 @@ var hippoTime = 0;
 class hippo {
     constructor(hippoIMG) {
         this.hippoIMG = hippoIMG;
+        console.log(this.hippoIMG.width);
+        if (this.hippoIMG.width == 0) {
+            this.hippoIMG.width = 75;
+        }
         this.pos = vec2(halfWidth - this.hippoIMG.width / 2, 0);
+        console.log(this.pos.x);
     }
     
     draw() {
@@ -115,9 +123,12 @@ class selector {
 
 class fruitFall {
     constructor(fruitIMG) {
-        this.pos = vec2(halfWidth - fruitIMG.width / 2, -fruitIMG.height -50);
         this.velocity = 6;
         this.fruitIMG = fruitIMG;
+        if (this.fruitIMG.width == 0) {
+            this.fruitIMG.width = 32;
+        }
+        this.pos = vec2(halfWidth - fruitIMG.width / 2, -fruitIMG.height -50);
 
         var fullPath = fruitIMG.src;
         var array = fullPath.split("/")
@@ -197,6 +208,7 @@ function gameDraw() {
     });
 
     hippopotamous.draw()
+    console.log(hippopotamous.pos.x);
 
     ctx.drawImage(bowl, halfWidth - 22, canvas.height - 24);
     currentFruit.draw();

@@ -1,7 +1,7 @@
 * Snorlax's Lunchtime in JS
 Small project making a clone of snorlax's lunchtime but with a hippo. 
 
-Play here: 
+Play here: https://trueauracoral.github.io/Snorlax-Lunchtime/ 
 
 ** Tutorials I used
 - https://fontstruct.com/fontstructions/show/716744/3_by_5_pixel_font Used this font
