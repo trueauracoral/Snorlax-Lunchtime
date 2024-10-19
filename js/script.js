@@ -13,13 +13,13 @@ var selectorImg =   loadImage('./img/selector.png');
 var bowl =          loadImage('./img/bowl.png');
 var hippoImage =    loadImage('./img/hippo.png');
 var bitehippo =     loadImage('./img/bitehippo.png');
+var retryButton =    loadImage('./img/retry.png');
 
 var pineapple =     loadImage('./img/pineapple.png');
 var pumpkin =       loadImage('./img/pumpkin.png');
 var watermellon =   loadImage('./img/watermellon.png');
 var alligator =     loadImage('./img/alligator.png');
 var oofalligator =  loadImage('./img/oofalligator.png');
-
 var fruits = [pineapple, pumpkin, watermellon, alligator];
 
 var pixelFont = new FontFace('pixelFont', 'url(font/3-by-5-pixel-font.ttf)');
@@ -47,12 +47,10 @@ var hippoTime = 0;
 class hippo {
     constructor(hippoIMG) {
         this.hippoIMG = hippoIMG;
-        console.log(this.hippoIMG.width);
         if (this.hippoIMG.width == 0) {
             this.hippoIMG.width = 75;
         }
         this.pos = vec2(halfWidth - this.hippoIMG.width / 2, 0);
-        console.log(this.pos.x);
     }
     
     draw() {
@@ -75,44 +73,47 @@ class selector {
     }
     
     update() {
-        this.pos.x -= this.velocity;
-        this.arrowPoint += 1;
-        if (isClicked && currentFruit.pos.y > 0) {
-            if (currentFruit.name == "alligator") {
-                currentFruit.fruitIMG = oofalligator;
-                console.log("Game Over");
-                die = true;
-                return;
-            }
+        if (!die) {
+            this.arrowPoint += 1;
+            this.pos.x -= this.velocity;
             
-            totalClicked++;
-            if (this.arrowPoint >= 1 && this.arrowPoint <= 4) {
-                POINTS += 10;
-            } else if (this.arrowPoint > 4 && this.arrowPoint <= 9) {
-                POINTS += 5;
-            } else if (this.arrowPoint > 9 && this.arrowPoint <= 12) {
-                POINTS += 1;
+            if (isClicked && currentFruit.pos.y > 0) {
+                if (currentFruit.name == "alligator") {
+                    currentFruit.fruitIMG = oofalligator;
+                    die = true;
+                } else {
+                    totalClicked++;
+                    console.log(this.arrowPoint);
+                    if (this.arrowPoint >= 1 && this.arrowPoint <= 5) {
+                        POINTS += 10;
+                    } else if (this.arrowPoint >=6 && this.arrowPoint <= 10) {
+                        POINTS += 5;
+                    } else if (this.arrowPoint > 10 && this.arrowPoint <= 12) {
+                        POINTS += 1;
+                    }
+                    hippopotamous.hippoIMG = bitehippo;
+                    //sleep(5);
+                    //hippopotamous.hippoIMG = hippoImage;
+                    currentFruit = newFruit();
+                }
             }
-            hippopotamous.hippoIMG = bitehippo;
-            console.log("hi it changed?");
-            //sleep(5);
-            //hippopotamous.hippoIMG = hippoImage;
-            currentFruit = newFruit();
-        }
-        
-        if (this.pos.x < 0 || isClicked == true) {
-            if (isClicked == false && currentFruit.name != "alligator") {
-                console.log("Game Over");
-                die = true;
-                return;
+                
+            
+            if (this.pos.x < 0 || isClicked == true) {
+                if (isClicked == false && currentFruit.name != "alligator") {
+                    die = true;
+                } else if (currentFruit.name == "alligator") {
+                    if (!die) {
+                        POINTS += 20;
+                        currentFruit = newFruit();
+
+                    }
+                }
+                this.pos.x = canvas.width - 8;
+                isClicked = false;
+                console.log(this.arrowPoint);
+                this.arrowPoint = 0;
             }
-            if (currentFruit.name == "alligator") {
-                POINTS += 20;
-                currentFruit = newFruit();
-            }
-            this.pos.x = canvas.width - 8;
-            isClicked = false;
-            this.arrowPoint = 1;
         }
     }
     
@@ -151,7 +152,6 @@ class fruitFall {
 const selecter = new selector(vec2(canvas.width - 8, canvas.height - 9), 8);
 function newFruit() {
     var fruit = fruits[Math.floor(Math.random()*fruits.length)]
-    console.log(fruit);
     return new fruitFall(fruit);
 }
 var currentFruit = newFruit();
@@ -208,27 +208,50 @@ function gameDraw() {
     });
 
     hippopotamous.draw()
-    console.log(hippopotamous.pos.x);
 
     ctx.drawImage(bowl, halfWidth - 22, canvas.height - 24);
     currentFruit.draw();
     selecter.draw();
+    if (die) {
+        ctx.drawImage(retryButton, halfWidth - 16, halfHeight + 15);
+    }
 }
+
 
 function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+    
     window.requestAnimationFrame(gameLoop);
-
+    
     gameUpdate();
     gameDraw();
 }
 
+function getMousePosition(canvas, event) {
+    let rect = canvas.getBoundingClientRect();
+    let x = (event.clientX - rect.left) / 8 ;
+    let y = (event.clientY - rect.top) / 8;
+    return {x: x, y: y};
+}
+
 document.addEventListener('pointerdown', (event) => {
     console.log("MOUSE CLICKED");
+    var mouseCoords = getMousePosition(canvas, event);
+    console.log(mouseCoords);
+    var restartX = halfWidth - retryButton.width / 2;
+    var restartY = halfHeight + 15;
+    if (die && (mouseCoords.x < restartX + retryButton.width && mouseCoords.x > restartX) && 
+    (mouseCoords.y > restartY && mouseCoords.y < restartY + retryButton.height)) {
+        console.log("Clicked restart");
+        die = false;
+        POINTS = 0;
+        totalClicked = 0;
+        currentFruit = newFruit();
+        selecter.arrowPoint = 1;
+    }
     if (!die) {
         isClicked = true;
-
+        
     }
 });
 
