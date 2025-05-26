@@ -39,6 +39,18 @@ function loadImage(src) {
     }
     return img;
 }
+
+function createAudio(src) {
+    var audio = document.createElement('audio');
+    audio.volume = 0.5;
+    //audio.loop   = options.loop;
+    audio.src = src;
+    return audio;
+}
+
+var successSound = createAudio("./sound/click.wav");
+var failSound = createAudio("./sound/oof.wav");
+
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -81,9 +93,13 @@ class selector {
                 if (currentFruit.name == "alligator") {
                     currentFruit.fruitIMG = oofalligator;
                     die = true;
+                    failSound.play();
                 } else {
                     totalClicked++;
                     console.log(this.arrowPoint);
+                    successSound.currentTime = 0
+                    successSound.play();
+
                     if (this.arrowPoint >= 1 && this.arrowPoint <= 5) {
                         POINTS += 10;
                     } else if (this.arrowPoint >=6 && this.arrowPoint <= 10) {
@@ -97,7 +113,6 @@ class selector {
                     currentFruit = newFruit();
                 }
             }
-                
             
             if (this.pos.x < 0 || isClicked == true) {
                 if (isClicked == false && currentFruit.name != "alligator") {
@@ -106,7 +121,7 @@ class selector {
                     if (!die) {
                         POINTS += 20;
                         currentFruit = newFruit();
-
+                        successSound.play();
                     }
                 }
                 this.pos.x = canvas.width - 8;
@@ -124,6 +139,7 @@ class selector {
 
 class fruitFall {
     constructor(fruitIMG) {
+        this.clickable = false;
         this.velocity = 6;
         this.fruitIMG = fruitIMG;
         if (this.fruitIMG.width == 0) {
@@ -141,6 +157,7 @@ class fruitFall {
             this.pos.y += this.velocity;
         } else {
             this.pos.y = 14;
+            this.clickable = true;
         }
     }
 
@@ -241,7 +258,8 @@ document.addEventListener('pointerdown', (event) => {
     var restartX = halfWidth - retryButton.width / 2;
     var restartY = halfHeight + 15;
     if (die && (mouseCoords.x < restartX + retryButton.width && mouseCoords.x > restartX) && 
-    (mouseCoords.y > restartY && mouseCoords.y < restartY + retryButton.height)) {
+    (mouseCoords.y > restartY && mouseCoords.y < restartY + retryButton.height) &&
+    currentFruit.clickable) {
         console.log("Clicked restart");
         die = false;
         POINTS = 0;
@@ -249,7 +267,7 @@ document.addEventListener('pointerdown', (event) => {
         currentFruit = newFruit();
         selecter.arrowPoint = 1;
     }
-    if (!die) {
+    if (!die && currentFruit.clickable) {
         isClicked = true;
         
     }
